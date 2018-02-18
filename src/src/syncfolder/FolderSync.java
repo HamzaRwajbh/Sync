@@ -1,13 +1,13 @@
-package SyncFile;
+package src.syncfolder;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
-public class Synchronize {
+public class FolderSync {
 
-    public Synchronize() {
+    public FolderSync() {
     }
 
     public void syncFolder(File source, File target) throws IOException {
@@ -46,7 +46,6 @@ public class Synchronize {
                     }
                 } else {
                     copy(i, target);
-                    System.out.println(i.getName() + " is not found in target , copy is done");
                 }
 
             }
