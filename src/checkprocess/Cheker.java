@@ -15,7 +15,7 @@ public class Cheker implements Runnable {
                 File A = new File("C:/A");
                 File B = new File("C:/B");
                 sync = new FolderSync(A,B);
-                Thread.sleep(20000);
+                Thread.sleep(60000);
             }
         } catch (IOException e) {
             e.printStackTrace();

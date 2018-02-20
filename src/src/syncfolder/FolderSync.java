@@ -40,20 +40,22 @@ public class FolderSync {
 
 
     public void deleteUnSyncFiles(File source , File target ) throws IOException {
-       File []subSource = source.listFiles() ;
-       Set<File> subSrc = new HashSet<File>(Arrays.asList(subSource));
+       File temp ;
+       String []subSource = source.list() ;
+       Set<String> subSrc = new HashSet<String>(Arrays.asList(subSource));
        String []subTarget = target.list();
        Set<String> subTag = new HashSet<String>(Arrays.asList(subTarget));
-       for(File i : subSrc){
-           if(!subTag.contains(i)){
-               if(!isNewFile(i) ){
-                   if( i.lastModified()<=checkPoint.getCheckPoint())
-                   System.out.println(i + "  is not in target");
-                   delete(i);
+       for(String i : subTag){
+        temp = new File(target.getAbsolutePath(),i);
+           if(!subSrc.contains(i)){
+               if(!isNewFile(temp) ){
+                   if( temp.lastModified()<=checkPoint.getCheckPoint())
+                   System.out.println(temp + "  is not in target");
+                   delete(temp);
                }
            }else{
-               if(i.isDirectory()){
-                   deleteUnSyncFiles(new File(source.getAbsolutePath(),i.getName()) , new File(target.getAbsolutePath(),i.getName()));
+               if(temp.isDirectory()){
+                   deleteUnSyncFiles(new File(source.getAbsolutePath(),temp.getName()) , new File(target.getAbsolutePath(),temp.getName()));
                }
            }
        }
@@ -80,7 +82,7 @@ public class FolderSync {
                 } else {
                     //System.out.println(i.getAbsolutePath() + "is a Directory and not Exist");
                     System.out.println(new File(target.getAbsolutePath(), i.getName()).mkdir() + " " + i.getAbsolutePath() + " is created");
-                    //syncFolder(i, new File(target.getAbsolutePath(), i.getName()));
+                    syncFolder(i, new File(target.getAbsolutePath(), i.getName()));
                 }// if the file with extension
             } else {
                 if (isExist(i.getName(), target.getAbsolutePath())) {
@@ -122,8 +124,13 @@ public class FolderSync {
         return false;
     }
 
-    public void copy(File source, File target) throws IOException {
-        Files.copy(source.toPath(), new File(target.getAbsolutePath(), source.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+    public void copy(File source, File target) {
+        try {
+            Files.copy(source.toPath(), new File(target.getAbsolutePath(), source.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            System.out.println("the file doesn't copy");
+            e.printStackTrace();
+        }
     }
 
 
